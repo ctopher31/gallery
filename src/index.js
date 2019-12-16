@@ -1,12 +1,54 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import { Provider } from 'react-redux';
+import App from './app/components/App';
+import { configureStore } from './store';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+const store = configureStore({
+  images: {
+    items: [],
+    count: 0,
+    offsets: 0,
+    loaded: false,
+    error: false,
+    message: '',
+  },
+  videos: {
+    items: [],
+    count: 0,
+    offsets: 0,
+    loaded: false,
+    error: false,
+    message: '',
+  },
+  tabs: {
+    items: ['Images', 'Videos'],
+    selectedTab: 'Images',
+  },
+  filters: {
+    items: {
+      products: [],
+      controlTypes: [],
+      styles: [],
+      rooms: [],
+    },
+    selectedProduct: '',
+    selectedControlType: '',
+    selectedStyle: '',
+    selectedRoom: '',
+  }
+});
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+const renderApp = () =>
+  ReactDOM.render(
+    <Provider store={store}>
+      <App />
+    </Provider>,
+    document.getElementById('root')
+  );
+
+if (process.env.NODE_ENV !== 'production' && module.hot) {
+  module.hot.accept('./app/components/App', renderApp);
+}
+
+renderApp();
